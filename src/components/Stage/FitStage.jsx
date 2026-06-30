@@ -12,16 +12,22 @@ export default function FitStage({ children }) {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
-    const fit = () =>
-      setScale(
-        Math.min(window.innerWidth / BASE_W, window.innerHeight / BASE_H)
-      );
+    const vv = window.visualViewport;
+    const fit = () => {
+      // visualViewport refleja el área visible real en móvil (al ocultarse la
+      // barra del navegador), evitando saltos de escala respecto a innerHeight.
+      const w = vv?.width ?? window.innerWidth;
+      const h = vv?.height ?? window.innerHeight;
+      setScale(Math.min(w / BASE_W, h / BASE_H));
+    };
     fit();
     window.addEventListener("resize", fit);
     window.addEventListener("orientationchange", fit);
+    vv?.addEventListener("resize", fit);
     return () => {
       window.removeEventListener("resize", fit);
       window.removeEventListener("orientationchange", fit);
+      vv?.removeEventListener("resize", fit);
     };
   }, []);
 

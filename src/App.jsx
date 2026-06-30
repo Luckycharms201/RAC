@@ -5,6 +5,7 @@ import { LIVE_SEQUENCE } from "./data/presentation";
 import LiveStage from "./components/Stage/LiveStage";
 import FitStage from "./components/Stage/FitStage";
 import AmbientBackground from "./components/ui/AmbientBackground";
+import RotateHint from "./components/ui/RotateHint";
 import DataLab from "./components/dev/DataLab";
 
 // Todos los videos de la presentación (rutas /media/*.mp4 dentro de los datos).
@@ -69,6 +70,7 @@ export default function App() {
           </div>
         </main>
       </FitStage>
+      <RotateHint />
     </NavContext.Provider>
   );
 }

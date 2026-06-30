@@ -28,6 +28,8 @@ html,
 body,
 #root {
   height: 100%;
+  /* alto dinámico real en móvil (descuenta la barra del navegador) */
+  height: 100dvh;
   margin: 0;
   padding: 0;
 }
@@ -40,6 +42,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow: hidden; /* la presentación gestiona sus propias escenas */
+  position: fixed;
+  inset: 0;
+  /* En móvil: el swipe lo gestiona la app, no el navegador. Sin rebote de
+     scroll ni "pull-to-refresh", sin doble-tap-zoom y sin resaltado al tocar. */
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Los enlaces sí deben recibir el toque de forma natural. */
+a {
+  touch-action: manipulation;
 }
 
 #root {
@@ -86,6 +103,13 @@ button {
 }
 .jp-pop { animation: jp-pop 0.42s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .jp-fade { animation: jp-fade 0.4s ease-out; }
+
+/* Balanceo del ícono del aviso "gira tu dispositivo" (de vertical a horizontal). */
+@keyframes rotate-wiggle {
+  0%, 55% { transform: rotate(0deg); }
+  78%, 100% { transform: rotate(-90deg); }
+}
+.rotate-wiggle { animation: rotate-wiggle 2.4s ease-in-out infinite; }
 
 /* Crossfade entre slides: la capa saliente se desvanece mientras la entrante
    aparece con su propia animación. */

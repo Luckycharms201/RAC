@@ -45,18 +45,13 @@ export const GROUPS = [
         type: "asistentes",
         title: "Asistentes Egresados a RAC",
         kicker: "Regreso a Casa · Evolución anual",
-        // El dato hero es el pico 2025 (egresados + acompañantes); las barras
-        // comparan asistencia de egresados año contra año.
-        hero: {
-          value: 1914,
-          label: "Asistentes 2025",
-          sub: "1,455 egresados · 1,914 con acompañantes",
-        },
+        // Tendencia de asistencia de egresados año contra año (línea/área). La
+        // cifra hero con acompañantes (1,914) vive en la slide siguiente.
         years: [
           { year: "2022", value: 1637 },
           { year: "2023", value: 1294 },
           { year: "2024", value: 1626 },
-          { year: "2025", value: 1455, note: "1,914 con acompañantes" },
+          { year: "2025", value: 1455 },
         ],
       },
       {

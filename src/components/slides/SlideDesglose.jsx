@@ -15,7 +15,8 @@ export default function SlideDesglose({ slide }) {
   const scope = useSlideTimeline((tl) => {
     tl.from(".sh-kicker", { opacity: 0, y: 12, duration: 0.5 })
       .from(".sh-title", { opacity: 0, y: 24, filter: "blur(10px)", duration: 0.7 }, "-=0.2")
-      .from(".mto-row", { opacity: 0, x: -24, duration: 0.5, stagger: 0.1 }, "-=0.2")
+      .from(".mto-hero", { opacity: 0, scale: 0.9, duration: 0.8 }, "-=0.2")
+      .from(".mto-row", { opacity: 0, x: -24, duration: 0.5, stagger: 0.1 }, "-=0.3")
       .from(
         ".mto-fill",
         { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power3.out" },
@@ -27,27 +28,44 @@ export default function SlideDesglose({ slide }) {
     <div ref={scope} className="flex h-full w-full flex-col gap-6 py-2">
       <SlideHeading kicker={slide.kicker} title={slide.title} />
 
-      {/* desglose por evento — ocupa el ancho completo */}
-      <div className="flex flex-1 flex-col justify-center gap-6">
-        {breakdown.map((b, i) => (
-          <div key={b.name} className="mto-row">
-            <div className="mb-2 flex items-baseline justify-between">
-              <span className="text-text text-lg font-medium">{b.name}</span>
-              <span className="text-text-dim tabular text-lg">
-                <CountUp value={b.amount} duration={1.8} delay={0.3 + i * 0.1} />
-              </span>
-            </div>
-            <div className="h-4 w-full overflow-hidden rounded-full bg-blue-900">
-              <div
-                className={[
-                  "mto-fill h-full rounded-full",
-                  i === 0 ? "bg-accent" : "bg-blue-500",
-                ].join(" ")}
-                style={{ width: `${(b.amount / max) * 100}%` }}
-              />
-            </div>
+      <div className="grid flex-1 grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_1fr]">
+        {/* hero total */}
+        <div className="mto-hero">
+          <span className="text-text-dim text-sm tracking-[0.3em] uppercase">
+            {slide.totalLabel ?? "Total"}
+          </span>
+          <div className="text-accent mt-3 text-8xl font-black leading-[0.9] tracking-tight md:text-[9.5rem]">
+            <CountUp value={slide.total} duration={2.4} />
           </div>
-        ))}
+          {slide.unit && (
+            <span className="text-text-dim mt-4 block text-xl font-medium">
+              {slide.unit}
+            </span>
+          )}
+        </div>
+
+        {/* desglose por evento */}
+        <div className="flex flex-col gap-4">
+          {breakdown.map((b, i) => (
+            <div key={b.name} className="mto-row">
+              <div className="mb-1.5 flex items-baseline justify-between">
+                <span className="text-text text-sm font-medium">{b.name}</span>
+                <span className="text-text-dim tabular text-sm">
+                  <CountUp value={b.amount} duration={1.8} delay={0.4 + i * 0.1} />
+                </span>
+              </div>
+              <div className="h-3 w-full overflow-hidden rounded-full bg-blue-900">
+                <div
+                  className={[
+                    "mto-fill h-full rounded-full",
+                    i === 0 ? "bg-accent" : "bg-blue-500",
+                  ].join(" ")}
+                  style={{ width: `${(b.amount / max) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

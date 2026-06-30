@@ -193,6 +193,50 @@ export function useNavigation() {
     navLock,
   ]);
 
+  // Swipe táctil (iPad / iPhone): deslizar horizontalmente avanza o retrocede,
+  // igual que las flechas. Sólo en el recorrido lineal (no en el hub) y nunca
+  // cuando una slide interactiva tomó el control (navLock). Un gesto vertical o
+  // un toque corto (< umbral) no navegan, para no chocar con taps en enlaces.
+  useEffect(() => {
+    if (view === "hub") return;
+
+    const THRESHOLD = 50; // px mínimos de desplazamiento horizontal
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    const onStart = (e) => {
+      if (e.touches.length !== 1) {
+        tracking = false; // pinch u otro gesto multitáctil: ignorar
+        return;
+      }
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    };
+
+    const onEnd = (e) => {
+      if (!tracking) return;
+      tracking = false;
+      if (navLock) return;
+      const t = e.changedTouches[0];
+      if (!t) return;
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      // exige gesto horizontal dominante y por encima del umbral
+      if (Math.abs(dx) < THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) next(); // desliza ←  → siguiente slide
+      else prev(); //        desliza →  → slide anterior
+    };
+
+    window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchend", onEnd);
+    };
+  }, [view, next, prev, navLock]);
+
   return {
     view,
     current,
